@@ -11,7 +11,7 @@
       avec un fichier docker-compose.yml ou un cluster Kubernetes à un seul nœud. Pour le moment, le déploiement de l'infrastructure se fera manuellement pour faciliter les tests.
     
 - [ ] Créer les différents services de l'application pour Kubernetes via les images stcokées et configurer une action GitHub pour effectuer un premier déploiement des services sur l'infrastructure.
-      Intégration d'une base de données MySql-bitnami créée avec Helm lors du déploiement GKE.
+      Intégration d'une base de données MySql-bitnami (scalable et cloud friendly) créée avec Helm lors du déploiement GKE.
 
 
 ## 11/07/2023:
