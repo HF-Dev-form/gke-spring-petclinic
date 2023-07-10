@@ -7,7 +7,7 @@
 
 - [ ] Créer les Dockerfiles (ou utiliser buildpacks.io) pour chaque service, afin de les construire en tant qu'images Docker. Configurer une action GitHub pour pousser les images vers un registre.
 
-- [ ] Mettre en place une infrastructure adéquate pour le déploiement de l'environnement de staging à l'aide de Terraform. Ensuite, créer une infrastructure plus légère pour l'environnement de développement, par exemple en utilisant Cloud Run avec un fichier docker-compose.yml ou un cluster Kubernetes à un seul nœud. Pour le moment, le déploiement de l'infrastructure se fera manuellement pour faciliter les tests.
+- [ ] Mettre en place une infrastructure adéquate pour le déploiement de l'environnement de staging à l'aide de Terraform. Ensuite, créer une infrastructure plus légère pour l'environnement de développement, par exemple en utilisant Cloud Run avec un fichier docker-compose.yml ou un cluster Kubernetes à un seul nœud. Pour le moment, le déploiement de l'infrastructure se fera manuellement pour faciliter les tests. Intégration d'une base de données MySql-bitnami créée avec Helm lors du déploiement GKE.
 
 - [ ] Créer les différents services de l'application pour Kubernetes via les images stcokées et configurer une action GitHub pour effectuer un premier déploiement des services sur l'infrastructure.
 
