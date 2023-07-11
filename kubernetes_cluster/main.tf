@@ -142,50 +142,53 @@ resource "google_sql_database_instance" "default" {
 }
 
 
+## DNS
+# comment the part in once the cluster is in place and you have retrieved the lb-app lb-grafana ips. Once retrieved, modify the vars: $preprod_environment_ur
+
+# $monitoring_url
+
+# variable "dns_name" {
+#   description = "Nom du domaine"
+#   type        = string
+#   default     = "hicham.poei.znk.io."
+# }
 
 
-variable "dns_name" {
-  description = "Nom du domaine"
-  type        = string
-  default     = "hicham.poei.znk.io."
-}
+# variable "preprod_environment_url" {
+#   description = "URL vers lb de l'api-gateway de l'environnement de pre-prod"
+#   type        = string
+#   default     = "34.76.242.183"
+# }
+
+# variable "monitoring_url" {
+#   description = "URL du service de monitoring"
+#   type        = string
+#   default     = "34.140.26.69"
+# }
+
+# variable "enable_dns" {
+#   description = "Indicate if DNS configuration should be enabled"
+#   type        = bool
+#   default     = true
+# }
 
 
-variable "preprod_environment_url" {
-  description = "URL vers lb de l'api-gateway de l'environnement de pre-prod"
-  type        = string
-  default     = "35.189.253.20"
-}
+# resource "google_dns_record_set" "preprod_record" {
+#   count        = var.enable_dns ? 1 : 0
+#   name         = "petclinic.preprod.${var.dns_name}"
+#   type         = "A"
+#   ttl          = 300
+#   rrdatas      = [var.preprod_environment_url]
+#   managed_zone = "zone-a"
+# }
 
-variable "monitoring_url" {
-  description = "URL du service de monitoring"
-  type        = string
-  default     = "35.205.145.33"
-}
-
-variable "enable_dns" {
-  description = "Indicate if DNS configuration should be enabled"
-  type        = bool
-  default     = true
-}
-
-
-resource "google_dns_record_set" "preprod_record" {
-  count        = var.enable_dns ? 1 : 0
-  name         = "petclinic.preprod.${var.dns_name}"
-  type         = "A"
-  ttl          = 300
-  rrdatas      = [var.preprod_environment_url]
-  managed_zone = "zone-a"
-}
-
-resource "google_dns_record_set" "monitoring_record" {
-  count        = var.enable_dns ? 1 : 0
-  name         = "petclinic.preprod.monitoring.${var.dns_name}"
-  type         = "A"
-  ttl          = 300
-  rrdatas      = [var.monitoring_url]
-  managed_zone = "zone-a"
-}
+# resource "google_dns_record_set" "monitoring_record" {
+#   count        = var.enable_dns ? 1 : 0
+#   name         = "petclinic.preprod.monitoring.${var.dns_name}"
+#   type         = "A"
+#   ttl          = 300
+#   rrdatas      = [var.monitoring_url]
+#   managed_zone = "zone-a"
+# }
 
 
