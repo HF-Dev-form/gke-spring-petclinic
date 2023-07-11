@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: "C:\\ProgramData\\chocolatey\\lib\\kubernetes-kompose\\tools\\kompose.exe convert"
+    kompose.version: "1.29.0 (997957870)"
+  creationTimestamp: null
+  name: tracing-server
+  namespace: spring-petclinic
+spec:
+  ports:
+    - name: "9411"
+      port: 9411
+      targetPort: 9411
+  selector:
+    app: petclinic
+    tier: tracing-server
+status:
+  loadBalancer: {}

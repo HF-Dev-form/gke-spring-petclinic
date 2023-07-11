@@ -1,0 +1,472 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: admin-server
+  namespace: spring-petclinic
+  labels:
+    app: petclinic
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: petclinic
+      tier: admin-server
+  template:
+    metadata:
+      labels:
+        app: petclinic
+        tier: admin-server
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/actuator/prometheus"
+        prometheus.io/port: "8080"
+    spec:
+      containers:
+        - name: admin-server
+          command:
+            [
+              "./dockerize",
+              "-wait=tcp://discovery-server:8761",
+              "-timeout=60s",
+              "--",
+              "java",
+              "org.springframework.boot.loader.JarLauncher",
+            ]
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "docker,mysql"
+          image: springcommunity/spring-petclinic-admin-server
+          ports:
+            - containerPort: 9090
+          resources:
+            limits:
+              memory: "536870912"
+      restartPolicy: Always
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-gateway
+  namespace: spring-petclinic
+  labels:
+    app: petclinic
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: petclinic
+      tier: api-gateway
+  template:
+    metadata:
+      labels:
+        app: petclinic
+        tier: api-gateway
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/actuator/prometheus"
+        prometheus.io/port: "8080"
+      creationTimestamp: null
+    spec:
+      containers:
+        - command:
+            - ./dockerize
+            - -wait=tcp://discovery-server:8761
+            - -timeout=60s
+            - --
+            - java
+            - org.springframework.boot.loader.JarLauncher
+          image: springcommunity/spring-petclinic-api-gateway
+          name: api-gateway
+          ports:
+            - containerPort: 8080
+          resources:
+            limits:
+              memory: "536870912"
+      restartPolicy: Always
+status: {}
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: config-server
+  namespace: spring-petclinic
+  labels:
+    app: petclinic
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: petclinic
+      tier: config-server
+  template:
+    metadata:
+      labels:
+        app: petclinic
+        tier: config-server
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/actuator/prometheus"
+        prometheus.io/port: "8888"
+      creationTimestamp: null
+    spec:
+      containers:
+        - env:
+            - name: spring.datasource.url
+              value: jdbc:mysql://database:3306
+          image: springcommunity/spring-petclinic-config-server
+          name: config-server
+          ports:
+            - containerPort: 8888
+          resources:
+            limits:
+              memory: "536870912"
+      restartPolicy: Always
+status: {}
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: customers-service
+  namespace: spring-petclinic
+  labels:
+    app: petclinic
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: petclinic
+      tier: customers-service
+  template:
+    metadata:
+      labels:
+        app: petclinic
+        tier: customers-service
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/actuator/prometheus"
+        prometheus.io/port: "8081"
+    spec:
+      containers:
+        - name: customers-service
+          command:
+            [
+              "./dockerize",
+              "-wait=tcp://discovery-server:8761",
+              "-timeout=60s",
+              "--",
+              "java",
+              "org.springframework.boot.loader.JarLauncher",
+              "--spring.profiles.active=mysql",
+            ]
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "docker,mysql"
+          image: springcommunity/spring-petclinic-customers-service
+          ports:
+            - containerPort: 8081
+          resources:
+            limits:
+              memory: "536870912"
+      restartPolicy: Always
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: database
+  namespace: spring-petclinic
+  labels:
+    app: petclinic
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: petclinic
+      tier: database
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: petclinic
+        tier: database
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/actuator/prometheus"
+        prometheus.io/port: "3306"
+      creationTimestamp: null
+    spec:
+      containers:
+        - env:
+            - name: MYSQL_DATABASE
+              value: petclinic
+            - name: MYSQL_PASSWORD
+              value: spring
+            - name: MYSQL_ROOT_PASSWORD
+              value: mysql
+            - name: MYSQL_USER
+              value: spring
+          image: mysql:8
+          name: database
+          ports:
+            - containerPort: 3306
+          resources:
+            limits:
+              memory: "536870912"
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: database-claim0
+      restartPolicy: Always
+      volumes:
+        - name: database-claim0
+          persistentVolumeClaim:
+            claimName: database-claim0
+status: {}
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: discovery-server
+  namespace: spring-petclinic
+  labels:
+    app: petclinic
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: petclinic
+      tier: discovery-server
+  template:
+    metadata:
+      labels:
+        app: petclinic
+        tier: discovery-server
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/actuator/prometheus"
+        prometheus.io/port: "8761"
+    spec:
+      containers:
+        - name: discovery-server
+          image: springcommunity/spring-petclinic-discovery-server
+          command:
+            - ./dockerize
+            - -wait=tcp://config-server:8888
+            - -timeout=60s
+            - --
+            - java
+            - org.springframework.boot.loader.JarLauncher
+          ports:
+            - containerPort: 8761
+          resources:
+            limits:
+              memory: "536870912"
+      restartPolicy: Always
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grafana-server
+  namespace: spring-petclinic
+  labels:
+    app: petclinic
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: petclinic
+      tier: grafana-server
+  template:
+    metadata:
+      labels:
+        app: petclinic
+        tier: grafana-server
+    spec:
+      containers:
+        - image: grafana/grafana
+          name: grafana-server
+          ports:
+            - containerPort: 3000
+          resources:
+            limits:
+              memory: "268435456"
+      restartPolicy: Always
+status: {}
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prometheus-server
+  namespace: spring-petclinic
+  labels:
+    app: petclinic
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: petclinic
+      tier: prometheus-server
+  template:
+    metadata:
+      labels:
+        app: petclinic
+        tier: prometheus-server
+    spec:
+      volumes:
+        - name: prometheus-config-volume
+          configMap:
+            name: prometheus-config
+      containers:
+        - name: prometheus-server
+          image: prom/prometheus
+          ports:
+            - containerPort: 9090
+          volumeMounts:
+            - name: prometheus-config-volume
+              mountPath: /etc/prometheus/prometheus.yml
+              subPath: prometheus.yml
+          resources:
+            limits:
+              memory: "268435456"
+      restartPolicy: Always
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: C:\ProgramData\chocolatey\lib\kubernetes-kompose\tools\kompose.exe convert
+    kompose.version: 1.29.0 (997957870)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: tracing-server
+  name: tracing-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: tracing-server
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: C:\ProgramData\chocolatey\lib\kubernetes-kompose\tools\kompose.exe convert
+        kompose.version: 1.29.0 (997957870)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/k8s2-default: "true"
+        io.kompose.service: tracing-server
+    spec:
+      containers:
+        - env:
+            - name: JAVA_OPTS
+              value: "-XX:+UnlockExperimentalVMOptions -Djava.security.egd=file:/dev/./urandom"
+          image: openzipkin/zipkin
+          name: tracing-server
+          ports:
+            - containerPort: 9411
+          resources:
+            limits:
+              memory: "536870912"
+      restartPolicy: Always
+status: {}
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vets-service
+  namespace: spring-petclinic
+  labels:
+    app: petclinic
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: petclinic
+      tier: vets-service
+  template:
+    metadata:
+      labels:
+        app: petclinic
+        tier: vets-service
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/actuator/prometheus"
+        prometheus.io/port: "8080"
+    spec:
+      containers:
+        - name: vets-service
+          command:
+            [
+              "./dockerize",
+              "-wait=tcp://discovery-server:8761",
+              "-timeout=60s",
+              "--",
+              "java",
+              "org.springframework.boot.loader.JarLauncher",
+              "--spring.profiles.active=mysql",
+            ]
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "docker,mysql"
+          image: springcommunity/spring-petclinic-vets-service
+          ports:
+            - containerPort: 8083
+          resources:
+            limits:
+              memory: "536870912"
+      restartPolicy: Always
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: visits-service
+  namespace: spring-petclinic
+  labels:
+    app: petclinic
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: petclinic
+      tier: visits-service
+  template:
+    metadata:
+      labels:
+        app: petclinic
+        tier: visits-service
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/actuator/prometheus"
+        prometheus.io/port: "8080"
+    spec:
+      containers:
+        - name: visits-service
+          command:
+            [
+              "./dockerize",
+              "-wait=tcp://discovery-server:8761",
+              "-timeout=60s",
+              "--",
+              "java",
+              "org.springframework.boot.loader.JarLauncher",
+              "--spring.profiles.active=mysql",
+            ]
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "docker,mysql"
+          image: springcommunity/spring-petclinic-visits-service
+          ports:
+            - containerPort: 8082
+          resources:
+            limits:
+              memory: "536870912"
+      restartPolicy: Always
