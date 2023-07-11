@@ -143,7 +143,7 @@ resource "google_sql_database_instance" "default" {
 
 
 ## DNS
-# comment the part in once the cluster is in place and you have retrieved the lb-app lb-grafana ips. Once retrieved, modify the vars: $preprod_environment_ur
+# uncomment this part once the cluster is in place and you have retrieved the lb-app lb-grafana ips. Once retrieved, modify the vars: $preprod_environment_ur
 
 # $monitoring_url
 
