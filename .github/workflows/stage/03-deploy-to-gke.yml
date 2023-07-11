@@ -5,7 +5,7 @@ on:
     workflows: ["Docker Build and Push", "Terraform Apply"]
     types:
       - completed
-    path: "stage/**"
+    paths: "stage/**"
 
 jobs:
   deploy:

@@ -3,7 +3,7 @@ name: Terraform Apply
 on:
   push:
     branches: ["master", "main"]
-    path: 'stage/**'
+    paths: "stage/**"
 
 jobs:
   terraform:

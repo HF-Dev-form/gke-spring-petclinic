@@ -5,7 +5,7 @@ on:
     branches:
       - main
       - master
-    path: 'stage/**'
+    paths: "stage/**"
 
 jobs:
   build-and-push:
