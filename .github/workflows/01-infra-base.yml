@@ -22,7 +22,7 @@ jobs:
       - name: Check if cluster exists
         id: cluster_exists
         run: |
-          if terraform show -no-color | grep -q 'google_container_cluster.my_cluster'; then
+          if terraform show -no-color | grep -q 'google_container_cluster.app-cluster'; then
             echo "Cluster already exists. Skipping Terraform init."
             echo "::set-output name=cluster_exists::true"
           else

@@ -157,13 +157,13 @@ variable "dns_name" {
 variable "preprod_environment_url" {
   description = "URL vers lb de l'api-gateway de l'environnement de pre-prod"
   type        = string
-  default     = "34.76.242.183"
+  default     = "35.205.222.232:80"
 }
 
 variable "monitoring_url" {
   description = "URL du service de monitoring"
   type        = string
-  default     = "34.140.26.69"
+  default     = "34.78.235.3"
 }
 
 variable "enable_dns" {
