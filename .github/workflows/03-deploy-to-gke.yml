@@ -28,11 +28,15 @@ jobs:
         run: |
           gcloud container clusters get-credentials app-cluster --zone europe-west1 --project ${{ secrets.GCP_PROJECT_ID }}
 
-      - name: Delete existing namespace if it exists
-        run: kubectl delete ns spring-petclinic --ignore-not-found=true
+      - name: Check if namespace exists
+        id: check-namespace
+        run: |
+          exists=$(kubectl get ns spring-petclinic --ignore-not-found=true -o jsonpath='{.metadata.name}')
+          echo "::set-output name=namespace_exists::${exists}"
 
       - name: Create new namespace
         run: kubectl create ns spring-petclinic
+        if: steps.check-namespace.outputs.namespace_exists != 'spring-petclinic'
 
       - name: Deploy application
         run: kubectl apply -f k8s
