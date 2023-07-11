@@ -1,28 +1,47 @@
-# name: Build and Publish Docker image
-# on:
-#   push:
-#     branches: [main, master]
-# jobs:
-#   build:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Checkout
-#         uses: actions/checkout@v3
-#       - name: Set up Docker Buildx
-#         uses: docker/setup-buildx-action@v2
-#       - name: Login to Docker Hub
-#         uses: docker/login-action@v2
-#         with:
-#           username: ${{ secrets.DOCKERHUB_USERNAME }}
-#           password: ${{ secrets.DOCKERHUB_PASSWORD }}
-#       - name: Install make
-#         run: sudo apt-get install make
-#       - name: Install Pack CLI
-#         run: |
-#           sudo add-apt-repository -y ppa:cncf-buildpacks/pack-cli
-#           sudo apt-get update
-#           sudo apt-get install -y pack-cli
-#       - name: Configure pack default builder
-#         run: pack config default-builder paketobuildpacks/builder:base
-#       - name: Run Makefile
-#         run: make all
+name: Docker Image Sync
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Login to Docker Hub
+        run: echo $DOCKERHUB_PASSWORD | docker login -u $DOCKERHUB_USERNAME --password-stdin
+
+      - name: Pull and push Docker images
+        run: |
+          docker pull springcommunity/spring-petclinic-admin-server
+          docker tag springcommunity/spring-petclinic-admin-server usinegk2023/spring-petclinic-admin-server
+          docker push usinegk2023/spring-petclinic-admin-server
+
+          docker pull springcommunity/spring-petclinic-api-gateway
+          docker tag springcommunity/spring-petclinic-api-gateway usinegk2023/spring-petclinic-api-gateway
+          docker push usinegk2023/spring-petclinic-api-gateway
+
+          docker pull springcommunity/spring-petclinic-config-server
+          docker tag springcommunity/spring-petclinic-config-server usinegk2023/spring-petclinic-config-server
+          docker push usinegk2023/spring-petclinic-config-server
+
+          docker pull springcommunity/spring-petclinic-customers-service
+          docker tag springcommunity/spring-petclinic-customers-service usinegk2023/spring-petclinic-customers-service
+          docker push usinegk2023/spring-petclinic-customers-service
+
+          docker pull springcommunity/spring-petclinic-discovery-server
+          docker tag springcommunity/spring-petclinic-discovery-server usinegk2023/spring-petclinic-discovery-server
+          docker push usinegk2023/spring-petclinic-discovery-server
+
+          docker pull springcommunity/spring-petclinic-vets-service
+          docker tag springcommunity/spring-petclinic-vets-service usinegk2023/spring-petclinic-vets-service
+          docker push usinegk2023/spring-petclinic-vets-service
+
+          docker pull springcommunity/spring-petclinic-visits-service
+          docker tag springcommunity/spring-petclinic-visits-service usinegk2023/spring-petclinic-visits-service
+          docker push usinegk2023/spring-petclinic-visits-service
