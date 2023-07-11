@@ -1,29 +1,24 @@
-variable "project_id" {
-  description = "ID du projet GCP"
-  type        = string
-  default     = "ferrache-hicham"
-}
-
 variable "dns_name" {
-  description = "Nom du domaine DNS à créer"
+  description = "Nom du domaine"
   type        = string
-  default     = "poei.znk.io."
+  default     = "hicham.poei.znk.io."
 }
 
-variable "apprenant" {
-  description = "Nom de l'apprenant"
-  type        = string
-  default     = "FH"
-}
 
 variable "preprod_environment_url" {
-  description = "URL de l'environnement de préproduction"
+  description = "URL vers lb de l'api-gateway de l'environnement de pre-prod"
   type        = string
-  default     = "http://35.189.253.20/"
+  default     = "34.76.242.183"
 }
 
 variable "monitoring_url" {
   description = "URL du service de monitoring"
   type        = string
-  default     = "http://35.205.145.33/"
+  default     = "34.140.26.69"
+}
+
+variable "enable_dns" {
+  description = "Indicate if DNS configuration should be enabled"
+  type        = bool
+  default     = true
 }

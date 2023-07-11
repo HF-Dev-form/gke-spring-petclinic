@@ -147,30 +147,30 @@ resource "google_sql_database_instance" "default" {
 
 # $monitoring_url
 
-# variable "dns_name" {
-#   description = "Nom du domaine"
-#   type        = string
-#   default     = "hicham.poei.znk.io."
-# }
+variable "dns_name" {
+  description = "Nom du domaine"
+  type        = string
+  default     = "hicham.poei.znk.io."
+}
 
 
-# variable "preprod_environment_url" {
-#   description = "URL vers lb de l'api-gateway de l'environnement de pre-prod"
-#   type        = string
-#   default     = "34.76.242.183"
-# }
+variable "preprod_environment_url" {
+  description = "URL vers lb de l'api-gateway de l'environnement de pre-prod"
+  type        = string
+  default     = "34.76.242.183"
+}
 
-# variable "monitoring_url" {
-#   description = "URL du service de monitoring"
-#   type        = string
-#   default     = "34.140.26.69"
-# }
+variable "monitoring_url" {
+  description = "URL du service de monitoring"
+  type        = string
+  default     = "34.140.26.69"
+}
 
-# variable "enable_dns" {
-#   description = "Indicate if DNS configuration should be enabled"
-#   type        = bool
-#   default     = true
-# }
+variable "enable_dns" {
+  description = "Indicate if DNS configuration should be enabled"
+  type        = bool
+  default     = true
+}
 
 
 # resource "google_dns_record_set" "preprod_record" {
