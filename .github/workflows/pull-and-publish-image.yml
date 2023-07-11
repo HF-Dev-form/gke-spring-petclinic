@@ -15,38 +15,39 @@ jobs:
         uses: actions/checkout@v3
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
-      - name: Login to Docker Hub
-        uses: docker/login-action@v2
+      - name: Login to Google Container Registry
+        uses: docker/login-action@v1
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          registry: gcr.io
+          username: _json_key
+          password: ${{ secrets.GCP_SA_KEY }}
 
       - name: Pull and push Docker images
         run: |
-          docker pull springcommunity/spring-petclinic-admin-server
-          docker tag springcommunity/spring-petclinic-admin-server usinegk2023/spring-petclinic-admin-server
-          docker push usinegk2023/spring-petclinic-admin-server
+          docker pull europe-west1-docker.pkg.dev/certain-purpose-392407/petclinic-microservices/springcommunity/spring-petclinic-admin-server@sha256:b64de86ae14eb589f18e38e9e2ff82dd9f10a6660674627af268d431c2ac5147
+          docker tag springcommunity/spring-petclinic-admin-server gcr.io/${{ secrets.GCP_PROJECT_ID }}/spring-petclinic-admin-server
+          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/spring-petclinic-admin-server
 
-          docker pull springcommunity/spring-petclinic-api-gateway
-          docker tag springcommunity/spring-petclinic-api-gateway usinegk2023/spring-petclinic-api-gateway
-          docker push usinegk2023/spring-petclinic-api-gateway
+          docker pull europe-west1-docker.pkg.dev/certain-purpose-392407/petclinic-microservices/springcommunity/spring-petclinic-api-gateway@sha256:daa24651241c891a90d9a1f3efd1f7eea8f900afbf9c852d95b33ba7e982cc89
+          docker tag springcommunity/spring-petclinic-api-gateway gcr.io/${{ secrets.GCP_PROJECT_ID }}/spring-petclinic-api-gateway
+          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/spring-petclinic-api-gateway
 
-          docker pull springcommunity/spring-petclinic-config-server
-          docker tag springcommunity/spring-petclinic-config-server usinegk2023/spring-petclinic-config-server
-          docker push usinegk2023/spring-petclinic-config-server
+          docker pull europe-west1-docker.pkg.dev/certain-purpose-392407/petclinic-microservices/springcommunity/spring-petclinic-config-server@sha256:f241a0c687856c3299868d62f645df961805ffe7210aca6a6dd3d5e6f32ee455
+          docker tag springcommunity/spring-petclinic-config-server gcr.io/${{ secrets.GCP_PROJECT_ID }}/spring-petclinic-config-server
+          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/spring-petclinic-config-server
 
-          docker pull springcommunity/spring-petclinic-customers-service
-          docker tag springcommunity/spring-petclinic-customers-service usinegk2023/spring-petclinic-customers-service
-          docker push usinegk2023/spring-petclinic-customers-service
+          docker pull europe-west1-docker.pkg.dev/certain-purpose-392407/petclinic-microservices/springcommunity/spring-petclinic-customers-service@sha256:71ef2781671dec9ee2d37137c369966c9340d1d086a48670a500c9b3550ed787
+          docker tag springcommunity/spring-petclinic-customers-service gcr.io/${{ secrets.GCP_PROJECT_ID }}/spring-petclinic-customers-service
+          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/spring-petclinic-customers-service
 
-          docker pull springcommunity/spring-petclinic-discovery-server
-          docker tag springcommunity/spring-petclinic-discovery-server usinegk2023/spring-petclinic-discovery-server
-          docker push usinegk2023/spring-petclinic-discovery-server
+          docker pull europe-west1-docker.pkg.dev/certain-purpose-392407/petclinic-microservices/springcommunity/spring-petclinic-discovery-server@sha256:21ba587b4691f3e8a92b7d408b765c0e71ca57d64e09059598e599f7d9fe5b8b
+          docker tag springcommunity/spring-petclinic-discovery-server gcr.io/${{ secrets.GCP_PROJECT_ID }}/spring-petclinic-discovery-server
+          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/spring-petclinic-discovery-server
 
-          docker pull springcommunity/spring-petclinic-vets-service
-          docker tag springcommunity/spring-petclinic-vets-service usinegk2023/spring-petclinic-vets-service
-          docker push usinegk2023/spring-petclinic-vets-service
+          docker pull europe-west1-docker.pkg.dev/certain-purpose-392407/petclinic-microservices/springcommunity/spring-petclinic-vets-service@sha256:e77ba39e9dc270a90f1957f3579d6051a257700a81a8f6edf9de4d0067b13960
+          docker tag springcommunity/spring-petclinic-vets-service gcr.io/${{ secrets.GCP_PROJECT_ID }}/spring-petclinic-vets-service
+          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/spring-petclinic-vets-service
 
-          docker pull springcommunity/spring-petclinic-visits-service
-          docker tag springcommunity/spring-petclinic-visits-service usinegk2023/spring-petclinic-visits-service
-          docker push usinegk2023/spring-petclinic-visits-service
+          docker pull europe-west1-docker.pkg.dev/certain-purpose-392407/petclinic-microservices/springcommunity/spring-petclinic-visits-service@sha256:bae82dc4a5027a7a2ca238af740ae12fc1dd8ee2562775cb6b7fa2a26f06ff26
+          docker tag springcommunity/spring-petclinic-visits-service gcr.io/${{ secrets.GCP_PROJECT_ID }}/spring-petclinic-visits-service
+          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/spring-petclinic-visits-service
