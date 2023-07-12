@@ -36,10 +36,6 @@ spec:
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: "docker,mysql"
-            - name: DOCKER_USERNAME
-              value: "usinegk2023"
-            - name: DOCKER_PASSWORD
-              value: "password2"
           image: usinegk2023/spring-petclinic-k8s-admin-server:latest
           ports:
             - containerPort: 9090

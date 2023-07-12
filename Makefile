@@ -27,3 +27,9 @@ vets:
 
 visits:
 	pack build $(DOCKER_PREFIX)/spring-petclinic-k8s-visits --publish -e BP_MAVEN_BUILT_MODULE=spring-petclinic-visits-service -e "BP_MAVEN_BUILD_ARGUMENTS=clean package -DskipTests"
+
+
+install-dockerize:
+	curl -sL -o dockerize.tar.gz https://github.com/jwilder/dockerize/releases/download/v$(DOCKERIZE_VERSION)/dockerize-linux-amd64-v$(DOCKERIZE_VERSION).tar.gz
+	tar -C /usr/local/bin -xzvf dockerize.tar.gz
+	rm dockerize.tar.gz
