@@ -124,6 +124,9 @@ jobs:
           exists=$(kubectl get ns spring-petclinic --ignore-not-found=true -o jsonpath='{.metadata.name}')
           echo "::set-output name=namespace_exists::${exists}"
 
+      - name: Delete all ressources
+        run: kubectl delete all --all -n spring-petclinic
+
       - name: Create new namespace
         run: kubectl create ns spring-petclinic
         if: steps.check-namespace.outputs.namespace_exists != 'spring-petclinic'
