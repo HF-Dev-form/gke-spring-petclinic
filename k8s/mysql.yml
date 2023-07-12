@@ -8,7 +8,6 @@ type: kubernetes.io/basic-auth
 stringData:
   password: test1234
 
-###
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -26,7 +25,6 @@ spec:
   hostPath:
     path: "/mnt/data"
 
-###
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -41,7 +39,6 @@ spec:
     requests:
       storage: 20Gi
 
-###
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -59,15 +56,14 @@ spec:
   strategy:
     type: Recreate
   template:
-  metadata:
-    labels:
-      app: petclinic
-      tier: database
-    annotations:
-      prometheus.io/scrape: "true"
-      prometheus.io/path: "/actuator/prometheus"
-      prometheus.io/port: "3306"
-    creationTimestamp: null
+    metadata:
+      labels:
+        app: petclinic
+        tier: database
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/actuator/prometheus"
+        prometheus.io/port: "3306"
     spec:
       containers:
         - image: mysql:5.6
@@ -88,14 +84,3 @@ spec:
         - name: mysql-persistent-storage
           persistentVolumeClaim:
             claimName: mysql-pv-claim
-####
-# ---
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   name: mysql
-# spec:
-#   ports:
-#     - port: 3306
-#   selector:
-#     app: mysql
