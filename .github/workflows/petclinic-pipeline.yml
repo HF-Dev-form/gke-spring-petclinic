@@ -72,7 +72,7 @@ jobs:
       #     path: ${GITHUB_WORKSPACE}/terraform.tfstate
 
   build-and-push:
-    needs: [terraform]
+    # needs: [terraform]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

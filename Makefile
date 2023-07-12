@@ -71,10 +71,10 @@ visits:
 build-with-dockerize:
 	@echo "#!/bin/bash" > build.sh
 	@echo "docker run --rm -v $$(pwd):/app -w /app maven:3.6-jdk-11 bash -c \"" >> build.sh
-	@echo "curl -sL -o dockerize.tar.gz https://github.com/jwilder/dockerize/releases/download/v$(DOCKERIZE_VERSION)/dockerize-linux-amd64-v$(DOCKERIZE_VERSION).tar.gz &&" >> build.sh
-	@echo "tar -C /usr/local/bin -xzvf dockerize.tar.gz &&" >> build.sh
-	@echo "rm dockerize.tar.gz\"" >> build.sh
+	@echo "mvn -DoutputDirectory=target -Dartifact=io.github.dockerize:dockerize:$(DOCKERIZE_VERSION):exe -DrepoUrl=https://repo1.maven.org/maven2 dependency:copy &&" >> build.sh
+	@echo "mvn clean package -DskipTests\"" >> build.sh
 	@chmod +x build.sh
 	@./build.sh
 	@rm build.sh
 	pack build $(DOCKER_PREFIX)/spring-petclinic-k8s-$(SERVICE) --publish -e BP_MAVEN_BUILT_MODULE=$(MODULE) -e "BP_MAVEN_BUILD_ARGUMENTS=clean package -DskipTests"
+
