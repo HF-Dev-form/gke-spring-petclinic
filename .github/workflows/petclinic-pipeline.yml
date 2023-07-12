@@ -62,14 +62,14 @@ jobs:
         if: steps.changes.outputs.has_changes == 'true'
         run: terraform apply -auto-approve
 
-      - name: Retrieve Terraform State
-        run: terraform state pull -input=false > ${GITHUB_WORKSPACE}/terraform.tfstate
+      # - name: Retrieve Terraform State
+      #   run: terraform state pull -input=false > ${GITHUB_WORKSPACE}/terraform.tfstate
 
-      - name: Upload Terraform State
-        uses: actions/upload-artifact@v2
-        with:
-          name: terraform-state
-          path: ${GITHUB_WORKSPACE}/terraform.tfstate
+      # - name: Upload Terraform State
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     name: terraform-state
+      #     path: ${GITHUB_WORKSPACE}/terraform.tfstate
 
   build-and-push:
     needs: [terraform]
