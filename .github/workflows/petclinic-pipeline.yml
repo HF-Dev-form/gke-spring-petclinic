@@ -19,6 +19,13 @@ jobs:
         run: echo '${{ secrets.GCP_CREDENTIALS }}' > creds.json
         shell: bash
 
+      - name: Authenticate with gcloud
+        run: |
+          curl https://sdk.cloud.google.com | bash
+          source /home/runner/.bashrc
+          gcloud auth activate-service-account --key-file=creds.json
+        shell: bash
+
       - name: Check if cluster exists
         id: cluster_exists
         run: |
