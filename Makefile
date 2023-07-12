@@ -73,6 +73,7 @@ build-with-dockerize:
 	@echo "docker run --rm -v $$(pwd):/app -w /app maven:3.6-jdk-11 bash -c \"" >> build.sh
 	@echo "curl -sL -o dockerize.tar.gz https://github.com/jwilder/dockerize/releases/download/v$(DOCKERIZE_VERSION)/dockerize-linux-amd64-v$(DOCKERIZE_VERSION).tar.gz &&" >> build.sh
 	@echo "tar -C /usr/local/bin -xzvf dockerize.tar.gz &&" >> build.sh
+	@echo "mkdir -p /app/target/ &&" >> build.sh
 	@echo "mv /usr/local/bin/dockerize /app/target/ &&" >> build.sh
 	@echo "chmod +x /app/target/dockerize &&" >> build.sh
 	@echo "rm dockerize.tar.gz\"" >> build.sh
