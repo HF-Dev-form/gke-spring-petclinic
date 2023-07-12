@@ -5,7 +5,13 @@ terraform {
       version = "3.51.0"
     }
   }
+  backend "gcs" {
+    bucket = "my-terraform-state"
+    prefix = "terraform/state"
+  }
 }
+
+
 
 provider "google" {
   credentials = file(var.credentials_file_path)
