@@ -80,11 +80,11 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
       - name: Configure Docker CLI for GCP
-        uses: docker/login-action@v1
+        uses: google-github-actions/setup-gcloud@v0.5.0
         with:
-          registry: gcr.io
-          username: _json_key
-          password: ${{ secrets.secrets.GCP_CREDENTIALS }}
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCP_CREDENTIALS }}
+          export_default_credentials: true
       - name: Install make
         run: sudo apt-get install make
       - name: Install Pack CLI
