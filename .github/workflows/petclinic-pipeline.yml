@@ -63,6 +63,15 @@ jobs:
         if: steps.changes.outputs.has_changes == 'true'
         run: terraform apply -auto-approve
 
+      - name: Retrieve Terraform State
+        run: terraform state pull > terraform.tfstate
+
+      - name: Upload Terraform State
+        uses: actions/upload-artifact@v2
+        with:
+          name: terraform-state
+          path: terraform.tfstate
+
   build-and-push:
     needs: [terraform]
     runs-on: ubuntu-latest
