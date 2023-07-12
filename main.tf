@@ -5,10 +5,10 @@ terraform {
       version = "3.51.0"
     }
   }
-  backend "gcs" {
-    bucket = "my-terraform-state"
-    prefix = "terraform/state"
-  }
+  # backend "gcs" {
+  #   bucket = "terraform-state"
+  #   prefix = "terraform/state"
+  # }
 }
 
 
