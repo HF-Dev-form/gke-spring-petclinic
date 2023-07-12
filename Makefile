@@ -1,4 +1,4 @@
-DOCKER_PREFIX = gcr.io/ferrache-hicham
+DOCKER_PREFIX = usinegk2023
 
 all: admin-server api-gateway config-server customers discovery-server vets visits
 
