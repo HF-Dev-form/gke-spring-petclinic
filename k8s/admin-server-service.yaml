@@ -2,14 +2,14 @@ apiVersion: v1
 kind: Service
 metadata:
   name: admin-server
-  namespace: spring-petclinic  # Ajout du namespace
+  namespace: spring-petclinic
 spec:
   ports:
-    - name: "admin-server"
+    - name: admin-server
       port: 9090
       targetPort: 9090
   selector:
-    app: petclinic  # Modification du sélecteur pour correspondre aux labels des déploiements
-    tier: admin-server  # Modification du sélecteur pour correspondre aux labels des déploiements
+    app: petclinic
+    tier: admin-server
 status:
   loadBalancer: {}

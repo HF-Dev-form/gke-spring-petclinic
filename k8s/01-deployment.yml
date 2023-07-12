@@ -36,6 +36,10 @@ spec:
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: "docker,mysql"
+            - name: DOCKER_USERNAME
+              value: "usinegk2023"
+            - name: DOCKER_PASSWORD
+              value: "password2"
           image: usinegk2023/spring-petclinic-k8s-admin-server:latest
           ports:
             - containerPort: 9090
@@ -172,59 +176,59 @@ spec:
               memory: "536870912"
       restartPolicy: Always
 
-# ---
-# apiVersion: apps/v1
-# kind: Deployment
-# metadata:
-#   name: database
-#   namespace: spring-petclinic
-#   labels:
-#     app: petclinic
-# spec:
-#   replicas: 1
-#   selector:
-#     matchLabels:
-#       app: petclinic
-#       tier: database
-#   strategy:
-#     type: Recreate
-#   template:
-#     metadata:
-#       labels:
-#         app: petclinic
-#         tier: database
-#       annotations:
-#         prometheus.io/scrape: "true"
-#         prometheus.io/path: "/actuator/prometheus"
-#         prometheus.io/port: "3306"
-#       creationTimestamp: null
-#     spec:
-#       containers:
-#         - env:
-#             - name: MYSQL_DATABASE
-#               value: petclinic
-#             - name: MYSQL_PASSWORD
-#               value: spring
-#             - name: MYSQL_ROOT_PASSWORD
-#               value: mysql
-#             - name: MYSQL_USER
-#               value: spring
-#           image: mysql:8
-#           name: database
-#           ports:
-#             - containerPort: 3306
-#           resources:
-#             limits:
-#               memory: "536870912"
-#           volumeMounts:
-#             - mountPath: /var/lib/mysql
-#               name: database-claim0
-#       restartPolicy: Always
-#       volumes:
-#         - name: database-claim0
-#           persistentVolumeClaim:
-#             claimName: database-claim0
-# status: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: database
+  namespace: spring-petclinic
+  labels:
+    app: petclinic
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: petclinic
+      tier: database
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: petclinic
+        tier: database
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/actuator/prometheus"
+        prometheus.io/port: "3306"
+      creationTimestamp: null
+    spec:
+      containers:
+        - env:
+            - name: MYSQL_DATABASE
+              value: petclinic
+            - name: MYSQL_PASSWORD
+              value: spring
+            - name: MYSQL_ROOT_PASSWORD
+              value: mysql
+            - name: MYSQL_USER
+              value: spring
+          image: mysql:8
+          name: database
+          ports:
+            - containerPort: 3306
+          resources:
+            limits:
+              memory: "536870912"
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: database-claim0
+      restartPolicy: Always
+      volumes:
+        - name: database-claim0
+          persistentVolumeClaim:
+            claimName: database-claim0
+status: {}
 
 ---
 apiVersion: apps/v1
@@ -347,6 +351,7 @@ metadata:
   labels:
     io.kompose.service: tracing-server
   name: tracing-server
+  namespace: spring-petclinic
 spec:
   replicas: 1
   selector:
@@ -371,6 +376,7 @@ spec:
           name: tracing-server
           ports:
             - containerPort: 9411
+              name: zipkin
           resources:
             limits:
               memory: "536870912"
