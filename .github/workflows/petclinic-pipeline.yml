@@ -24,6 +24,7 @@ jobs:
           curl https://sdk.cloud.google.com | bash
           source /home/runner/.bashrc
           gcloud auth activate-service-account --key-file=creds.json
+          echo "GOOGLE_APPLICATION_CREDENTIALS=$GITHUB_WORKSPACE/creds.json" >> $GITHUB_ENV
         shell: bash
 
       - name: Check if cluster exists
