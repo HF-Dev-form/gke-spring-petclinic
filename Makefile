@@ -70,16 +70,17 @@ visits:
 	$(MAKE) build-with-dockerize SERVICE=visits MODULE=spring-petclinic-visits-service
 
 build-with-dockerize:
-	@echo "FROM openjdk:11-jre as builder" > Dockerfile
+	cd $(MODULE) && mvn package
+	@echo "FROM eclipse-temurin:17 as builder" > Dockerfile
 	@echo "WORKDIR application" >> Dockerfile
 	@echo "ARG ARTIFACT_NAME" >> Dockerfile
-	@echo "COPY ${ARTIFACT_NAME}.jar application.jar" >> Dockerfile
+	@echo "COPY target/${ARTIFACT_NAME}*.jar application.jar" >> Dockerfile
 	@echo "RUN java -Djarmode=layertools -jar application.jar extract" >> Dockerfile
 	@echo "ARG DOCKERIZE_VERSION" >> Dockerfile
 	@echo "RUN wget -O dockerize.tar.gz https://github.com/jwilder/dockerize/releases/download/${DOCKERIZE_VERSION}/dockerize-alpine-linux-amd64-${DOCKERIZE_VERSION}.tar.gz" >> Dockerfile
 	@echo "RUN tar xzf dockerize.tar.gz" >> Dockerfile
 	@echo "RUN chmod +x dockerize" >> Dockerfile
-	@echo "FROM adoptopenjdk:11-jre-hotspot" >> Dockerfile
+	@echo "FROM eclipse-temurin:17" >> Dockerfile
 	@echo "WORKDIR application" >> Dockerfile
 	@echo "COPY --from=builder application/dockerize ./" >> Dockerfile
 	@echo "EXPOSE ${EXPOSED_PORT}" >> Dockerfile
@@ -90,3 +91,4 @@ build-with-dockerize:
 	@echo "COPY --from=builder application/application/ ./" >> Dockerfile
 	@echo "ENTRYPOINT [\"java\", \"org.springframework.boot.loader.JarLauncher\"]" >> Dockerfile
 	docker build -t $(DOCKER_PREFIX)/spring-petclinic-k8s-$(SERVICE) --build-arg ARTIFACT_NAME=$(MODULE) --build-arg DOCKERIZE_VERSION=$(DOCKERIZE_VERSION) --build-arg EXPOSED_PORT=$(EXPOSED_PORT) .
+

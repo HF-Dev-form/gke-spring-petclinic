@@ -85,7 +85,7 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
       - name: Install make
-        run: sudo apt-get install make
+        run: sudo apt-get install make openjdk-17-jdk
       - name: Install Pack CLI
         run: |
           sudo add-apt-repository -y ppa:cncf-buildpacks/pack-cli
