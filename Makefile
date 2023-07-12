@@ -44,6 +44,7 @@
 
 DOCKER_PREFIX = usinegk2023
 DOCKERIZE_VERSION = 0.7.0
+EXPOSED_PORT = 8080
 
 all: admin-server api-gateway config-server customers discovery-server vets visits
 
@@ -81,7 +82,6 @@ build-with-dockerize:
 	@echo "FROM adoptopenjdk:11-jre-hotspot" >> Dockerfile
 	@echo "WORKDIR application" >> Dockerfile
 	@echo "COPY --from=builder application/dockerize ./" >> Dockerfile
-	@echo "ARG EXPOSED_PORT" >> Dockerfile
 	@echo "EXPOSE ${EXPOSED_PORT}" >> Dockerfile
 	@echo "ENV SPRING_PROFILES_ACTIVE docker" >> Dockerfile
 	@echo "COPY --from=builder application/dependencies/ ./" >> Dockerfile
@@ -89,4 +89,4 @@ build-with-dockerize:
 	@echo "COPY --from=builder application/snapshot-dependencies/ ./" >> Dockerfile
 	@echo "COPY --from=builder application/application/ ./" >> Dockerfile
 	@echo "ENTRYPOINT [\"java\", \"org.springframework.boot.loader.JarLauncher\"]" >> Dockerfile
-	docker build -t $(DOCKER_PREFIX)/spring-petclinic-k8s-$(SERVICE) --build-arg ARTIFACT_NAME=$(MODULE) --build-arg DOCKERIZE_VERSION=$(DOCKERIZE_VERSION) --build-arg EXPOSED_PORT=8080 .
+	docker build -t $(DOCKER_PREFIX)/spring-petclinic-k8s-$(SERVICE) --build-arg ARTIFACT_NAME=$(MODULE) --build-arg DOCKERIZE_VERSION=$(DOCKERIZE_VERSION) --build-arg EXPOSED_PORT=$(EXPOSED_PORT) .
