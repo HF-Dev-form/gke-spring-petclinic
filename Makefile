@@ -69,15 +69,24 @@ visits:
 	$(MAKE) build-with-dockerize SERVICE=visits MODULE=spring-petclinic-visits-service
 
 build-with-dockerize:
-	@echo "#!/bin/bash" > build.sh
-	@echo "docker run --rm -v $$(pwd):/app -w /app maven:3.6-jdk-11 bash -c \"" >> build.sh
-	@echo "curl -sL -o dockerize.tar.gz https://github.com/jwilder/dockerize/releases/download/v$(DOCKERIZE_VERSION)/dockerize-linux-amd64-v$(DOCKERIZE_VERSION).tar.gz &&" >> build.sh
-	@echo "tar -C /usr/local/bin -xzvf dockerize.tar.gz &&" >> build.sh
-	@echo "mkdir -p /app/target/ &&" >> build.sh
-	@echo "mv /usr/local/bin/dockerize /app/target/ &&" >> build.sh
-	@echo "chmod +x /app/target/dockerize &&" >> build.sh
-	@echo "rm dockerize.tar.gz\"" >> build.sh
-	@chmod +x build.sh
-	@./build.sh
-	@rm build.sh
-	pack build $(DOCKER_PREFIX)/spring-petclinic-k8s-$(SERVICE) --publish -e BP_MAVEN_BUILT_MODULE=$(MODULE) -e "BP_MAVEN_BUILD_ARGUMENTS=clean package -DskipTests"
+	@echo "FROM openjdk:11-jre as builder" > Dockerfile
+	@echo "WORKDIR application" >> Dockerfile
+	@echo "ARG ARTIFACT_NAME" >> Dockerfile
+	@echo "COPY ${ARTIFACT_NAME}.jar application.jar" >> Dockerfile
+	@echo "RUN java -Djarmode=layertools -jar application.jar extract" >> Dockerfile
+	@echo "ARG DOCKERIZE_VERSION" >> Dockerfile
+	@echo "RUN wget -O dockerize.tar.gz https://github.com/jwilder/dockerize/releases/download/${DOCKERIZE_VERSION}/dockerize-alpine-linux-amd64-${DOCKERIZE_VERSION}.tar.gz" >> Dockerfile
+	@echo "RUN tar xzf dockerize.tar.gz" >> Dockerfile
+	@echo "RUN chmod +x dockerize" >> Dockerfile
+	@echo "FROM adoptopenjdk:11-jre-hotspot" >> Dockerfile
+	@echo "WORKDIR application" >> Dockerfile
+	@echo "COPY --from=builder application/dockerize ./" >> Dockerfile
+	@echo "ARG EXPOSED_PORT" >> Dockerfile
+	@echo "EXPOSE ${EXPOSED_PORT}" >> Dockerfile
+	@echo "ENV SPRING_PROFILES_ACTIVE docker" >> Dockerfile
+	@echo "COPY --from=builder application/dependencies/ ./" >> Dockerfile
+	@echo "COPY --from=builder application/spring-boot-loader/ ./" >> Dockerfile
+	@echo "COPY --from=builder application/snapshot-dependencies/ ./" >> Dockerfile
+	@echo "COPY --from=builder application/application/ ./" >> Dockerfile
+	@echo "ENTRYPOINT [\"java\", \"org.springframework.boot.loader.JarLauncher\"]" >> Dockerfile
+	docker build -t $(DOCKER_PREFIX)/spring-petclinic-k8s-$(SERVICE) --build-arg ARTIFACT_NAME=$(MODULE) --build-arg DOCKERIZE_VERSION=$(DOCKERIZE_VERSION) --build-arg EXPOSED_PORT=8080 .
