@@ -63,13 +63,13 @@ jobs:
         run: terraform apply -auto-approve
 
       - name: Retrieve Terraform State
-        run: terraform state pull > terraform.tfstate
+        run: terraform state pull -input=false > ${GITHUB_WORKSPACE}/terraform.tfstate
 
       - name: Upload Terraform State
         uses: actions/upload-artifact@v2
         with:
           name: terraform-state
-          path: terraform.tfstate
+          path: ${GITHUB_WORKSPACE}/terraform.tfstate
 
   build-and-push:
     needs: [terraform]
