@@ -86,9 +86,14 @@ jobs:
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
       - name: Install make
         run: sudo apt-get install make
+      - name: Install Pack CLI
+        run: |
+          sudo add-apt-repository -y ppa:cncf-buildpacks/pack-cli
+          sudo apt-get update
+          sudo apt-get install -y pack-cli
+      - name: Configure pack default builder
+        run: pack config default-builder paketobuildpacks/builder:base
       - name: Build and push Docker images
-        run: make all
-      - name: Run Makefile
         run: make all
 
   deploy:
