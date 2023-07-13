@@ -48,20 +48,20 @@ all: api-gateway customers-service vets-service visits-service discovery-server
 
 api-gateway:
 	cd spring-petclinic-api-gateway && mvn clean package -DskipTests
-	docker build -t $(DOCKER_PREFIX)/spring-petclinic-k8s-api-gateway --build-arg ARTIFACT_NAME=target/*.jar ./spring-petclinic-api-gateway
+	docker build -t $(DOCKER_PREFIX)/spring-petclinic-k8s-api-gateway --build-arg ARTIFACT_NAME=$(shell basename spring-petclinic-api-gateway/target/*.jar .jar) ./spring-petclinic-api-gateway
 
 customers-service:
 	cd spring-petclinic-customers-service && mvn clean package -DskipTests
-	docker build -t $(DOCKER_PREFIX)/spring-petclinic-k8s-customers-service --build-arg ARTIFACT_NAME=target/*.jar ./spring-petclinic-customers-service
+	docker build -t $(DOCKER_PREFIX)/spring-petclinic-k8s-customers-service --build-arg ARTIFACT_NAME=$(shell basename spring-petclinic-customers-service/target/*.jar .jar) ./spring-petclinic-customers-service
 
 vets-service:
 	cd spring-petclinic-vets-service && mvn clean package -DskipTests
-	docker build -t $(DOCKER_PREFIX)/spring-petclinic-k8s-vets-service --build-arg ARTIFACT_NAME=target/*.jar ./spring-petclinic-vets-service
+	docker build -t $(DOCKER_PREFIX)/spring-petclinic-k8s-vets-service --build-arg ARTIFACT_NAME=$(shell basename spring-petclinic-vets-service/target/*.jar .jar) ./spring-petclinic-vets-service
 
 visits-service:
 	cd spring-petclinic-visits-service && mvn clean package -DskipTests
-	docker build -t $(DOCKER_PREFIX)/spring-petclinic-k8s-visits-service --build-arg ARTIFACT_NAME=target/*.jar ./spring-petclinic-visits-service
+	docker build -t $(DOCKER_PREFIX)/spring-petclinic-k8s-visits-service --build-arg ARTIFACT_NAME=$(shell basename spring-petclinic-visits-service/target/*.jar .jar) ./spring-petclinic-visits-service
 
 discovery-server:
 	cd spring-petclinic-discovery-server && mvn clean package -DskipTests
-	docker build -t $(DOCKER_PREFIX)/spring-petclinic-k8s-discovery-server --build-arg ARTIFACT_NAME=target/*.jar ./spring-petclinic-discovery-server
+	docker build -t $(DOCKER_PREFIX)/spring-petclinic-k8s-discovery-server --build-arg ARTIFACT_NAME=$(shell basename spring-petclinic-discovery-server/target/*.jar .jar) ./spring-petclinic-discovery-server
