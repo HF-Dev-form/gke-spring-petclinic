@@ -36,7 +36,7 @@ spec:
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: "docker,mysql"
-          image: usinegk2023/spring-petclinic-k8s-admin-server:latest
+          image: springcommunity/spring-petclinic-admin-server
           ports:
             - containerPort: 9090
           resources:
@@ -76,7 +76,7 @@ spec:
             - --
             - java
             - org.springframework.boot.loader.JarLauncher
-          image: usinegk2023/spring-petclinic-k8s-api-gateway:latest
+          image: springcommunity/spring-petclinic-api-gateway
           name: api-gateway
           ports:
             - containerPort: 8080
@@ -115,7 +115,7 @@ spec:
         - env:
             - name: spring.datasource.url
               value: jdbc:mysql://database:3306
-          image: usinegk2023/spring-petclinic-k8s-config-server:latest
+          image: springcommunity/spring-petclinic-config-server
           name: config-server
           ports:
             - containerPort: 8888
@@ -164,7 +164,7 @@ spec:
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: "docker,mysql"
-          image: usinegk2023/spring-petclinic-k8s-customers:latest
+          image: springcommunity/spring-petclinic-customers-service
           ports:
             - containerPort: 8081
           resources:
@@ -252,7 +252,7 @@ spec:
     spec:
       containers:
         - name: discovery-server
-          image: usinegk2023/spring-petclinic-k8s-discovery-server:latest
+          image: springcommunity/spring-petclinic-discovery-server
           command:
             - ./dockerize
             - -wait=tcp://config-server:8888
@@ -418,7 +418,7 @@ spec:
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: "docker,mysql"
-          image: usinegk2023/spring-petclinic-k8s-vets:latest
+          image: springcommunity/spring-petclinic-vets-service
           ports:
             - containerPort: 8083
           resources:
@@ -465,7 +465,7 @@ spec:
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: "docker,mysql"
-          image: usinegk2023/spring-petclinic-k8s-visits:latest
+          image: springcommunity/spring-petclinic-visits-service
           ports:
             - containerPort: 8082
           resources:
