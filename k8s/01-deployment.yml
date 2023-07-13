@@ -18,7 +18,6 @@ spec:
         app: petclinic
         tier: admin-server
       annotations:
-        prometheus.io/scrape: "true"
         prometheus.io/path: "/actuator/prometheus"
         prometheus.io/port: "8080"
     spec:
@@ -63,7 +62,6 @@ spec:
         app: petclinic
         tier: api-gateway
       annotations:
-        prometheus.io/scrape: "true"
         prometheus.io/path: "/actuator/prometheus"
         prometheus.io/port: "8080"
       creationTimestamp: null
@@ -145,7 +143,6 @@ spec:
         app: petclinic
         tier: customers-service
       annotations:
-        prometheus.io/scrape: "true"
         prometheus.io/path: "/actuator/prometheus"
         prometheus.io/port: "8081"
     spec:
@@ -194,7 +191,6 @@ spec:
         app: petclinic
         tier: database
       annotations:
-        prometheus.io/scrape: "true"
         prometheus.io/path: "/actuator/prometheus"
         prometheus.io/port: "3306"
       creationTimestamp: null
@@ -246,7 +242,6 @@ spec:
         app: petclinic
         tier: discovery-server
       annotations:
-        prometheus.io/scrape: "true"
         prometheus.io/path: "/actuator/prometheus"
         prometheus.io/port: "8761"
     spec:
@@ -399,7 +394,6 @@ spec:
         app: petclinic
         tier: vets-service
       annotations:
-        prometheus.io/scrape: "true"
         prometheus.io/path: "/actuator/prometheus"
         prometheus.io/port: "8080"
     spec:
@@ -446,7 +440,6 @@ spec:
         app: petclinic
         tier: visits-service
       annotations:
-        prometheus.io/scrape: "true"
         prometheus.io/path: "/actuator/prometheus"
         prometheus.io/port: "8080"
     spec:
